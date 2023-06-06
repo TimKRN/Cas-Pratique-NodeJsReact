@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GoFullstackFrActivity</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="styles.d9dc716df0c684d997ec.css">
+</head>
+
+<body>
+  <h1>To do list</h1>
+  <div class="todo">
+    <ul id="todolist">
+      <!-- Les <li> vont ici -->
+    </ul>
+  </div>
+
+  <h1>Products</h1>
+  <ul id="productlist">
+    <!-- Les <li> vont ici -->
+  </ul>
+  <script>
+    const list = document.querySelector(".todo");
+
+    function ListElement(elementText, description, color, price = null) {
+      return '<li style="color: ' + (color !== null ? color : 'orange') + '"><span style="font-weight : bold">' + elementText + '</span> - <span style="color: blue"> ' + description + '</span>' + (price !== null ? priceElement(price) : '') + '</li>';
+    }
+
+    function priceElement(price) {
+      return '- <span style="color:' + (price < 3000 ? 'green' : 'red') + '">' + price + '</span>';
+    }
+
+    function fetchTodos() {
+
+      fetch('http://localhost:3000/api/todo/')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          console.log(jsonResponse);
+          const todoList = jsonResponse.todolist
+          let todoHtml = '';
+          for (let i = 0; i < todoList.length; i++) {
+            console.log(todoList[i].name);
+            todoHtml += ListElement(todoList[i].name, todoList[i].description, 'green');
+            // todoHtml += '<li style="color: green">' + todoList[i].name + '</li>'
+          }
+
+          document.querySelector('#todolist').innerHTML = todoHtml;
+
+        })
+        .catch(
+          (error) =>
+            (list.textContent = `Could not fetch verse: ${error}`)
+        );
+    }
+
+    function fetchProducts() {
+      fetch('http://localhost:3000/api/products/')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          console.log(jsonResponse);
+          const productList = jsonResponse.products
+          let productHtml = '';
+          for (let i = 0; i < productList.length; i++) {
+            console.log(productList[i].name);
+            productHtml += ListElement(productList[i].name, productList[i].description, null, productList[i].price);
+            // productHtml += '<li style="color: green">' + productList[i].name + '</li>'
+          }
+
+          document.querySelector('#productlist').innerHTML = productHtml;
+
+        })
+        .catch(
+          (error) =>
+            (list.textContent = `Could not fetch verse: ${error}`)
+        );
+    }
+
+    fetchTodos();
+    fetchProducts();
+  </script>
+</body>
+
+</html>
