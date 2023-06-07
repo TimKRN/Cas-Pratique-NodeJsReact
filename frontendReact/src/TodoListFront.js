@@ -10,7 +10,7 @@ export default function app() {
   const [error, setError] = useState(null);
 
 
-  async function funGetData() {
+  async function refreshList() {
     try {
       setLoading(true);
       const response = await fetch(
@@ -23,7 +23,23 @@ export default function app() {
       }
       let actualData = await response.json();
       console.log('new todo list', actualData.todolist);
-      setTodos(actualData.todolist);
+
+      // let myTodos = [];
+      // for (let index = 0; index < actualData.todolist.length; index++) {
+      //   const newTodo = {
+      //     ...actualData.todolist[index],
+      //     isLoading: false,
+      //   }
+      //   myTodos.push(newTodo)
+      // }
+
+      const myTodos = actualData.todolist.map((todo) => {
+        return {
+          ...todo,
+          isLoading: false,
+        }
+      })
+      setTodos(myTodos);
       setError(null);
     } catch (err) {
       console.error(err);
@@ -33,14 +49,6 @@ export default function app() {
       setLoading(false);
     }
   }
-
-  function refreshList() {
-    console.log('We need to refresh the list');
-      // Ici pas accès à response
-      funGetData();
-  }
-
-  
 
   // useEffect(() => {
   //   // Ici pas accès à response
@@ -72,13 +80,20 @@ export default function app() {
 
   useEffect(() => {
     // Ici pas accès à response
-    funGetData()
+    refreshList()
   }, [])
 
   const mesJolisLi = [];
   for (let index = 0; index < todos.length; index++) {
     mesJolisLi.push(
-      <TodoElement name={todos[index].name} description={todos[index].description} isDone={todos[index].isDone} id={todos[index]._id} key={index} onTodoListDone={refreshList} />
+      <TodoElement
+        name={todos[index].name}
+        description={todos[index].description}
+        isDone={todos[index].isDone}
+        id={todos[index]._id} key={index}
+        onTodoListDone={refreshList}
+        isLoading={todos[index].isLoading}
+      />
     );
   }
 
@@ -99,7 +114,7 @@ export default function app() {
           {mesJolisLi}
         </ul>
         {loading && loadingHtml}
-        <TodoForm onTodoListAddSuccess={refreshList} />
+        <TodoForm onTodoListAddSuccess={refreshList} setTodos={setTodos} />
       </div>
 
       <h1 style={{marginTop: '3rem'}}>Product list</h1>

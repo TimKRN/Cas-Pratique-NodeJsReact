@@ -18,7 +18,23 @@ export default function TodoForm(props) {
       setDescValue('');
     }
 
-    async function postTodo(inputValue, descValue) {
+    function handleSubmit(e) {
+      e.preventDefault();
+      console.log(inputValue);
+      console.log(descValue);
+      const myTodo = {
+        name: inputValue,
+        description: descValue,
+        isDone: false,
+        isLoading: true,
+      }
+
+      props.setTodos((lesTodosQuueExistentDeja) => lesTodosQuueExistentDeja.concat([myTodo]));
+
+      postTodo();
+  }
+
+    async function postTodo() {
       setLoading(true);
       console.log({
         name : inputValue,
@@ -62,13 +78,6 @@ export default function TodoForm(props) {
     function handleDescInputChange(event) {
         setDescValue(event.target.value);
     }
-    function pushALert(e) {
-        e.preventDefault();
-        console.log(inputValue);
-        console.log(descValue);
-        postTodo(inputValue, descValue);
-          
-    }
 
     let errorsTable = [];
 
@@ -103,7 +112,7 @@ export default function TodoForm(props) {
         <br/>
         <label htmlFor="desc">Décrire la tâche à executer</label>
         <input onChange={handleDescInputChange} value={descValue} type="text" name="desc" id="desc" />
-        <button onClick={pushALert} disabled={loading}>Ajouter la todo</button>
+        <button onClick={handleSubmit} disabled={loading}>Ajouter la todo</button>
         {error && <div className="displayError" >Errors:<ul>{errorsTable}</ul></div>}
     </form>
     )

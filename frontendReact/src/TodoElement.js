@@ -57,7 +57,7 @@ export default function TodoElement(props) {
           }
 
     return (
-      <li className={`${props.isDone === true ? 'taskDone' : ''} ${loading ? "listOnWaiting": ''}`} >
+      <li className={`${props.isDone === true ? 'taskDone' : ''} ${props.isLoading || loading ? "listOnWaiting": ''}`} >
         {props.name} - {props.description}
         <input onChange={handleChange} type="checkbox" checked={props.isDone} />
         <button onClick={handleDelete}>🗑</button>
