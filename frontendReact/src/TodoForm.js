@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ErrorElement from "./ErrorElement";
 
-export default function TodoForm(props) {
+export default function TodoForm({ setTodos, onTodoListAddSuccess }) {
     const [inputValue, setInputValue] = useState('');
     const [descValue, setDescValue] = useState('');
     const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function TodoForm(props) {
         isLoading: true,
       }
 
-      props.setTodos((lesTodosQuueExistentDeja) => lesTodosQuueExistentDeja.concat([myTodo]));
+      setTodos((lesTodosQuueExistentDeja) => lesTodosQuueExistentDeja.concat([myTodo]));
 
       postTodo();
   }
@@ -65,7 +65,7 @@ export default function TodoForm(props) {
             throw new Error(error);
           }
 
-          props.onTodoListAddSuccess();
+          onTodoListAddSuccess();
           ResetInputValues();
         } catch (err) {
           console.error("Error:", err);
@@ -112,7 +112,7 @@ export default function TodoForm(props) {
         <br/>
         <label htmlFor="desc">Décrire la tâche à executer</label>
         <input onChange={handleDescInputChange} value={descValue} type="text" name="desc" id="desc" />
-        <button onClick={handleSubmit} disabled={loading}>Ajouter la todo</button>
+        <button id="addToDo" onClick={handleSubmit} disabled={loading}>Ajouter la todo</button>
         {error && <div className="displayError" >Errors:<ul>{errorsTable}</ul></div>}
     </form>
     )

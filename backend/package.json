@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@directus/sdk": "^10.3.3",
+    "@medusajs/admin": "^6.0.1",
     "express": "^4.18.2",
     "mongoose": "^7.2.0"
   }

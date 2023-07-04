@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const productModel = require('./models/products');
 const todoModel = require('./models/todo');
+const client = require('./database')
 
 const app = express();
 
@@ -14,6 +15,10 @@ mongoose.connect('mongodb+srv://timkrn:Krn910912@cluster0.brmgviz.mongodb.net/?r
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+client.connect()
+  .then(() => console.log('Connexion à PostgreSQL réussie !'))
+  .catch(() => console.log('Connexion à PostgreSQL échouée !'));
+
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -22,6 +27,41 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+
+//___________________________PRODUCTS WITH PostgreSQL________________________________________
+
+// app.get('/api/pg/products', async (req, res, next) => {
+
+//   try {
+//     const products = await client.query(`
+//     SELECT product.name,
+//       article.color,
+//       article.size,
+//       article.total_price,      
+//       product.slug,
+//       product.description,
+//       brand.name AS brandName,
+//       product_type.name AS productTypeName,
+//       product_type.description AS productTypeDesc,
+//       discount.percent_value,
+//       discount.value
+//     FROM product
+//     JOIN brand ON brand.id = product.brandid
+//     JOIN product_type ON product.typeid = product_type.id
+//     JOIN article ON article.productid = product.id 
+//     LEFT JOIN discount ON article.discountid = discount.id
+//     ORDER BY product.name
+//     `);
+//     console.log(products);
+//     res.json(products.rows);
+//   } catch(e) {
+//     console.error(e);
+//     res.status(500).send('Une erreur est survenue')
+//   }
+
+// });
+
+
 
 //___________________________PRODUCTS________________________________________
 

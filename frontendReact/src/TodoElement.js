@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-export default function TodoElement(props) {
+export default function TodoElement({todo, onTodoListDone}) {
 
   const [loading, setLoading] = useState(false);
 
     function handleChange(event) {
         let isItDone= event.target.checked;
         console.log(isItDone);
-        let heildy= props.id;
+        let heildy= todo._id;
         handleTaskDone(heildy, isItDone);
     }
 
@@ -26,7 +26,7 @@ export default function TodoElement(props) {
         
             const result = await response.json();
             console.log("Success:", result);
-            props.onTodoListDone();
+            onTodoListDone();
           } catch (error) {
             console.error("Error:", error);
           }
@@ -38,7 +38,7 @@ export default function TodoElement(props) {
         async function handleDelete() {
             try {
               setLoading(true);
-              const response = await fetch("http://localhost:3001/api/todo/"+props.id, {
+              const response = await fetch("http://localhost:3001/api/todo/"+todo._id, {
                 method: "DELETE", 
                 headers: {
                   "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function TodoElement(props) {
           
               const result = await response.json();
               console.log("C'est supprimé:", result);
-              props.onTodoListDone();
+              onTodoListDone();
             } catch (error) {
               console.error("Error:", error);
             }
@@ -57,9 +57,9 @@ export default function TodoElement(props) {
           }
 
     return (
-      <li className={`${props.isDone === true ? 'taskDone' : ''} ${props.isLoading || loading ? "listOnWaiting": ''}`} >
-        {props.name} - {props.description}
-        <input onChange={handleChange} type="checkbox" checked={props.isDone} />
+      <li className={`${todo.isDone === true ? 'taskDone' : ''} ${todo.isLoading || loading ? "listOnWaiting": ''}`} >
+        <span className="taskText">{todo.name} - {todo.description}</span>
+        <input className="checkBox" onChange={handleChange} type="checkbox" checked={todo.isDone} />
         <button onClick={handleDelete}>🗑</button>
       </li>
     )
