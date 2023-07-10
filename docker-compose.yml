@@ -104,3 +104,5 @@ services:
       DB_PASSWORD: 'postgres'
       ENVIRONMENT: production
       PUBLIC_URL: 'https://directus.demo1.kitt.avizou.eu'
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
