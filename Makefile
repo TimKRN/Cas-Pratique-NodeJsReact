@@ -17,17 +17,17 @@ build_db:
 	# docker tag $(ORG)/postgres-reactfront:${VERSION} $(REGISTRY)/$(ORG)/postgres-reactfront:$(BRANCH)-latest
 
 front:
-	cd frontendReact
+	cd frontendReact && \
 	REACT_APP_DIRECTUS_URL=http://localhost:8055 REACT_APP_BACKEND_URL=http://localhost:3001 npm run build
 
 build_front_docker:
-	cd frontendReact
-	REACT_APP_DIRECTUS_URL=https://directus.demo1.kitt.avizou.eu REACT_APP_BACKEND_URL=https://back.demo1.kitt.avizou.eu npm run build
+	cd frontendReact && \
+	REACT_APP_DIRECTUS_URL=https://directus.demo1.kitt.avizou.eu REACT_APP_BACKEND_URL=https://back.demo1.kitt.avizou.eu npm run build && \
 	docker build -f Dockerfile -t $(ORG)/reactfront:${VERSION} .
 	docker tag $(ORG)/reactfront:${VERSION} $(ORG)/reactfront:$(BRANCH)-latest
 
 build_back_docker:
-	cd backend
+	cd backend && \
 	docker build -f Dockerfile -t $(ORG)/nodebackend:${VERSION} .
 	docker tag $(ORG)/nodebackend:${VERSION} $(ORG)/nodebackend:$(BRANCH)-latest
 
