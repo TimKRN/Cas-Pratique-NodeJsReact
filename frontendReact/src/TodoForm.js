@@ -42,7 +42,7 @@ export default function TodoForm({ setTodos, onTodoListAddSuccess }) {
         isDone : false
       });
         try {
-          const response = await fetch("http://localhost:3001/api/todo", {
+          const response = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/todo", {
             method: "POST", // or 'PUT'
             headers: {
               "Content-Type": "application/json",

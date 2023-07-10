@@ -7,7 +7,6 @@ import { Directus } from '@directus/sdk';
 const directus = new Directus(process.env.REACT_APP_DIRECTUS_URL);
 
 export default function app() {
-  console.log('process.env.REACT_APP_DIRECTUS_URL', process.env.REACT_APP_DIRECTUS_URL)
   const [isTodoListOpen, setTodoListOpen] = useState(false);
   const [isProductListOpen, setProductListOpen] = useState(true);
   const [todos, setTodos] = useState([]);

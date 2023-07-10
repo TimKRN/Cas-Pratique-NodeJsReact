@@ -14,7 +14,7 @@ export default function TodoElement({todo, onTodoListDone}) {
     async function handleTaskDone(heildy, isItDone) {
           try {
             setLoading(true);
-            const response = await fetch("http://localhost:3001/api/todo/"+heildy, {
+            const response = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/todo/"+heildy, {
               method: "PUT", 
               headers: {
                 "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function TodoElement({todo, onTodoListDone}) {
         async function handleDelete() {
             try {
               setLoading(true);
-              const response = await fetch("http://localhost:3001/api/todo/"+todo._id, {
+              const response = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/todo/"+todo._id, {
                 method: "DELETE", 
                 headers: {
                   "Content-Type": "application/json",
