@@ -87,7 +87,7 @@ services:
         - traefik.http.middlewares.demo1_directus.headers.STSPreload=true
         - traefik.http.routers.demo1_directus.middlewares=demo1_directus-compress,demo1_directus
     volumes:
-      - ./uploads:/directus/uploads
+      - ./directus/uploads:/directus/uploads
     networks:
       - demoreact
       - ractools_traefik
