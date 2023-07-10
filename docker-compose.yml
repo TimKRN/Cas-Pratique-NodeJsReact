@@ -1,0 +1,104 @@
+version: '3'
+networks:
+  ractools_traefik:
+    external: true
+  demoreact:
+volumes:
+  demo1_db:
+
+services:
+  backend:
+    image: pierrea/nodebackend:master-latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.demo1_backend.rule=Host(`back.demo1.kitt.avizou.eu`)
+        - traefik.http.services.demo1_backend.loadbalancer.server.port=80
+        - traefik.http.routers.demo1_backend.tls=true
+        - traefik.http.routers.demo1_backend.entrypoints=websecure
+        - traefik.http.routers.demo1_backend.tls.certresolver=mytlschallenge
+        - traefik.http.middlewares.demo1_backend-compress.compress=true
+        - traefik.http.middlewares.demo1_backend.headers.SSLRedirect=true
+        - traefik.http.middlewares.demo1_backend.headers.STSSeconds=315360000
+        - traefik.http.middlewares.demo1_backend.headers.browserXSSFilter=true
+        - traefik.http.middlewares.demo1_backend.headers.contentTypeNosniff=true
+        - traefik.http.middlewares.demo1_backend.headers.forceSTSHeader=true
+        - traefik.http.middlewares.demo1_backend.headers.SSLHost=${maestro-corporation.com}
+        - traefik.http.middlewares.demo1_backend.headers.STSIncludeSubdomains=true
+        - traefik.http.middlewares.demo1_backend.headers.STSPreload=true
+        - traefik.http.routers.demo1_backend.middlewares=demo1_backend-compress,demo1_backend
+    networks:
+      - demoreact
+      - ractools_traefik
+
+  frontapp:
+    image: pierrea/reactfront:master-latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.demo1_frontapp.rule=Host(`front.demo1.kitt.avizou.eu`)
+        - traefik.http.services.demo1_frontapp.loadbalancer.server.port=80
+        - traefik.http.routers.demo1_frontapp.tls=true
+        - traefik.http.routers.demo1_frontapp.entrypoints=websecure
+        - traefik.http.routers.demo1_frontapp.tls.certresolver=mytlschallenge
+        - traefik.http.middlewares.demo1_frontapp-compress.compress=true
+        - traefik.http.middlewares.demo1_frontapp.headers.SSLRedirect=true
+        - traefik.http.middlewares.demo1_frontapp.headers.STSSeconds=315360000
+        - traefik.http.middlewares.demo1_frontapp.headers.browserXSSFilter=true
+        - traefik.http.middlewares.demo1_frontapp.headers.contentTypeNosniff=true
+        - traefik.http.middlewares.demo1_frontapp.headers.forceSTSHeader=true
+        - traefik.http.middlewares.demo1_frontapp.headers.SSLHost=${maestro-corporation.com}
+        - traefik.http.middlewares.demo1_frontapp.headers.STSIncludeSubdomains=true
+        - traefik.http.middlewares.demo1_frontapp.headers.STSPreload=true
+        - traefik.http.routers.demo1_frontapp.middlewares=demo1_frontapp-compress,demo1_frontapp
+    networks:
+      - demoreact
+      - ractools_traefik
+
+  demodb:
+    image: pierrea/postgres-reactfront:master-latest
+    networks:
+      - demoreact
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - demo1_db:/var/lib/postgresql/data
+
+  directus:
+    image: directus/directus:latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.demo1_directus.rule=Host(`directus.demo1.kitt.avizou.eu`)
+        - traefik.http.services.demo1_directus.loadbalancer.server.port=8055
+        - traefik.http.routers.demo1_directus.tls=true
+        - traefik.http.routers.demo1_directus.entrypoints=websecure
+        - traefik.http.routers.demo1_directus.tls.certresolver=mytlschallenge
+        - traefik.http.middlewares.demo1_directus-compress.compress=true
+        - traefik.http.middlewares.demo1_directus.headers.SSLRedirect=true
+        - traefik.http.middlewares.demo1_directus.headers.STSSeconds=315360000
+        - traefik.http.middlewares.demo1_directus.headers.browserXSSFilter=true
+        - traefik.http.middlewares.demo1_directus.headers.contentTypeNosniff=true
+        - traefik.http.middlewares.demo1_directus.headers.forceSTSHeader=true
+        - traefik.http.middlewares.demo1_directus.headers.SSLHost=${maestro-corporation.com}
+        - traefik.http.middlewares.demo1_directus.headers.STSIncludeSubdomains=true
+        - traefik.http.middlewares.demo1_directus.headers.STSPreload=true
+        - traefik.http.routers.demo1_directus.middlewares=demo1_directus-compress,demo1_directus
+    volumes:
+      - ./uploads:/directus/uploads
+    networks:
+      - demoreact
+      - ractools_traefik
+    environment:
+      KEY: '255d861b-5ea1-5996-9aa3-922530ec40b1'
+      SECRET: '6116487b-cda1-52c2-b5b5-c8022c45e263'
+      DB_CLIENT: 'pg'
+      DB_HOST: 'demodb'
+      DB_PORT: '5432'
+      DB_DATABASE: 'postgres'
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'postgres'
+      ENVIRONMENT: production
+      PUBLIC_URL: 'https://directus.demo1.kitt.avizou.eu'

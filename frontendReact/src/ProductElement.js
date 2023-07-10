@@ -8,7 +8,7 @@ export default function ProductElement(props) {
         <div class="box content">
             <div>
             <img class="productPicture"
-            src={"http://localhost:8055/assets/" + props.img}
+            src={process.env.REACT_APP_DIRECTUS_URL + "/assets/" + props.img}
             alt={props.imgName}></img>
             </div>
             <div>{props.color && <span>Couleur: {props.color} </span>}</div>

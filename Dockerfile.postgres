@@ -1,0 +1,8 @@
+FROM postgres:14
+
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+COPY dump2.sql /docker-entrypoint-initdb.d/01_dump.sql
+RUN echo "GRANT CONNECT ON DATABASE postgres TO postgres;" >> /docker-entrypoint-initdb.d/02_grant_connect.sql
+RUN echo "GRANT pg_read_all_data TO postgres;" >> /docker-entrypoint-initdb.d/02_grant_connect.sql
+RUN echo "GRANT pg_write_all_data TO postgres;" >> /docker-entrypoint-initdb.d/02_grant_connect.sql
