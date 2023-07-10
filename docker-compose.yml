@@ -9,6 +9,8 @@ volumes:
 services:
   backend:
     image: pierrea/nodebackend:master-latest
+    environment:
+      DB_HOST: demodb
     deploy:
       labels:
         - traefik.enable=true

@@ -32,4 +32,4 @@ build_back_docker:
 	docker tag $(ORG)/nodebackend:${VERSION} $(ORG)/nodebackend:$(BRANCH)-latest
 
 deploy:
-	docker stack deploy -f docker-compose.yml ractools
+	docker stack deploy --compose-file=docker-compose.yml ractools
